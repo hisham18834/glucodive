@@ -84,11 +84,20 @@ label{display:block;font-size:13px;color:var(--mu);margin:10px 0 4px}
 footer{border-top:1px solid var(--line);padding:22px 0;color:var(--mu);font-size:13px;text-align:center}
 @media (max-width:560px){.ex{flex-direction:column;text-align:center}.ringwrap{flex-direction:column;text-align:center}.logo{font-size:19px}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.draw{stroke-dashoffset:0}}
+.chip.sm{padding:6px 12px;font-size:13px;white-space:nowrap}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.82);display:none;align-items:center;justify-content:center;padding:18px;z-index:50}
+.ov.a{display:flex}
+.ov .card{width:100%;max-width:380px;margin:0;position:relative;animation:up .3s ease both}
+.ov .x{position:absolute;right:12px;top:6px;background:none;border:0;color:var(--mu);font-size:28px;cursor:pointer}
+.err{color:#ff7b5c;font-size:14px;min-height:20px;margin:8px 0 0}
+.lnk{background:none;border:0;color:var(--or);font:inherit;font-size:14px;cursor:pointer;padding:8px 0 0}
+.gbtn{width:100%;margin-top:10px;background:#fff;color:#000;border:0;border-radius:12px;padding:11px;font:inherit;font-weight:700;cursor:pointer}
+@media (max-width:700px){header .wrap{flex-wrap:wrap;height:auto;padding-top:8px;padding-bottom:8px}nav{order:3;width:100%}}
 </style>
 </head>
 <body>
 <header><div class="wrap"><div class="logo">Gluco<b>dive</b></div>
-<nav><button data-t="today" class="a">Today</button><button data-t="train">Train</button><button data-t="nutrition">Nutrition</button><button data-t="report">Report</button></nav></div></header>
+<nav><button data-t="today" class="a">Today</button><button data-t="train">Train</button><button data-t="nutrition">Nutrition</button><button data-t="report">Report</button></nav><button class="chip sm" id="ab">Sign in</button></div></header>
 
 <div class="wrap">
 <div class="hero"><h1>Dive into your <b>best self</b>.</h1><p>Your daily checklist, exercise guide, nutrition plan and monthly report in one place. <span id="date"></span></p></div>
@@ -136,6 +145,17 @@ footer{border-top:1px solid var(--line);padding:22px 0;color:var(--mu);font-size
 </section>
 </div>
 <footer>Glucodive · Your data stays in this browser. Nutrition numbers are estimates, not medical advice.</footer>
+
+<div class="ov" id="ov"><div class="card"><button class="x" id="ox" aria-label="Close">×</button>
+<h2 id="ot">Welcome back</h2><p class="mu">Sign in to save your progress and open it on any device.</p>
+<div class="chips"><button class="chip on" id="m1">Sign in</button><button class="chip" id="m2">Register</button></div>
+<div id="nmw" style="display:none"><label>Your name</label><input id="nm" autocomplete="name" maxlength="30"></div>
+<label>Email</label><input id="em" type="email" autocomplete="email" inputmode="email">
+<label>Password (at least 6 characters)</label><input id="pw" type="password" autocomplete="current-password">
+<p class="err" id="er"></p>
+<button class="btn full" id="go" style="margin-top:6px">Sign in</button>
+<button class="gbtn" id="gg">Continue with Google</button>
+<button class="lnk" id="fp">Forgot password?</button></div></div>
 
 <script>
 var OR="#ff9f1c";
@@ -319,6 +339,84 @@ function show(n){
 }
 document.querySelectorAll("nav button").forEach(function(b){b.onclick=function(){location.hash=b.dataset.t;show(b.dataset.t)}});
 today();food();show(location.hash.slice(1)||"today");
+</script>
+<script type="module">
+import{initializeApp}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import{getAuth,onAuthStateChanged,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,sendPasswordResetEmail,updateProfile,GoogleAuthProvider,signInWithPopup}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import{getFirestore,doc,getDoc,setDoc}from"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+/* ====== PASTE YOUR FIREBASE SETTINGS HERE (see the setup steps) ====== */
+const firebaseConfig={
+ apiKey:"PASTE_API_KEY",
+ authDomain:"PASTE_PROJECT_ID.firebaseapp.com",
+ projectId:"PASTE_PROJECT_ID",
+ appId:"PASTE_APP_ID"
+};
+/* ===================================================================== */
+
+const E=id=>document.getElementById(id);
+const ready=!firebaseConfig.apiKey.startsWith("PASTE");
+let auth=null,db=null,user=null,mode="in",tmr=0,wasIn=false;
+if(ready){try{const app=initializeApp(firebaseConfig);auth=getAuth(app);db=getFirestore(app)}catch(e){}}
+const DEF=()=>({habits:["Wake up on time","Exercise","Study","Prayer","Drink enough water"],log:{},ex:{},meals:{},water:{},p:null,rt:"21:30"});
+
+function label(){E("ab").textContent=user?"Hi, "+(user.displayName||(user.email||"you").split("@")[0])+" · Sign out":"Sign in"}
+function open(){E("ov").classList.add("a");E("er").textContent=ready?"":"Sign-in is not set up yet. The site owner still needs to add the Firebase settings."}
+function close(){E("ov").classList.remove("a")}
+function setMode(m){mode=m;E("m1").classList.toggle("on",m=="in");E("m2").classList.toggle("on",m=="up");E("nmw").style.display=m=="up"?"block":"none";
+ E("go").textContent=m=="in"?"Sign in":"Create account";E("ot").textContent=m=="in"?"Welcome back":"Create your account";E("pw").autocomplete=m=="in"?"current-password":"new-password";E("er").textContent=ready?"":E("er").textContent}
+function msg(e){var c=e&&e.code||"";
+ if(c=="auth/invalid-credential"||c=="auth/wrong-password"||c=="auth/user-not-found")return"Wrong email or password.";
+ if(c=="auth/email-already-in-use")return"This email is already registered. Try signing in.";
+ if(c=="auth/weak-password")return"Password must be at least 6 characters.";
+ if(c=="auth/invalid-email")return"That email address doesn’t look right.";
+ if(c=="auth/too-many-requests")return"Too many attempts. Please wait a few minutes.";
+ if(c=="auth/network-request-failed")return"No internet connection.";
+ if(c=="auth/popup-closed-by-user"||c=="auth/cancelled-popup-request")return"";
+ return"Something went wrong. Please try again."}
+function refresh(){
+ var p=S.p;["age","ht","wt"].forEach(function(k){E(k).value=p?p[k]:""});
+ if(p)["sex","exp","act","goal"].forEach(function(k){E(k).value=p[k]});
+ E("rt").value=S.rt||"21:30";rstat();today();food();train();report()}
+
+E("ab").onclick=function(){if(user){if(confirm("Sign out of Glucodive?"))signOut(auth)}else open()};
+E("ox").onclick=close;E("ov").onclick=function(e){if(e.target.id=="ov")close()};
+document.addEventListener("keydown",function(e){if(e.key=="Escape")close()});
+E("m1").onclick=function(){setMode("in")};E("m2").onclick=function(){setMode("up")};
+E("pw").onkeydown=function(e){if(e.key=="Enter")E("go").click()};
+
+E("go").onclick=async function(){
+ if(!ready){open();return}
+ var em=E("em").value.trim(),pw=E("pw").value;
+ if(!em||!pw){E("er").textContent="Please enter your email and password.";return}
+ E("go").disabled=true;E("er").textContent="";
+ try{
+  if(mode=="in")await signInWithEmailAndPassword(auth,em,pw);
+  else{var c=await createUserWithEmailAndPassword(auth,em,pw),n=E("nm").value.trim();if(n){await updateProfile(c.user,{displayName:n});label()}}
+  close();E("pw").value="";
+ }catch(e){E("er").textContent=msg(e)}
+ E("go").disabled=false};
+E("gg").onclick=async function(){
+ if(!ready){open();return}
+ try{await signInWithPopup(auth,new GoogleAuthProvider());close()}catch(e){E("er").textContent=msg(e)}};
+E("fp").onclick=async function(){
+ if(!ready){open();return}
+ var em=E("em").value.trim();if(!em){E("er").textContent="Type your email above first, then tap Forgot password.";return}
+ try{await sendPasswordResetEmail(auth,em);E("er").style.color="var(--or)";E("er").textContent="Reset link sent. Check your inbox and spam folder."}catch(e){E("er").style.color="";E("er").textContent=msg(e)}};
+
+/* save to the cloud whenever the app saves */
+const baseSave=window.save;
+window.save=function(){baseSave();
+ if(user&&db){clearTimeout(tmr);tmr=setTimeout(function(){setDoc(doc(db,"users",user.uid),{data:JSON.stringify(S),updated:Date.now()}).catch(function(){})},800)}};
+
+if(auth)onAuthStateChanged(auth,async function(u){
+ user=u;label();
+ if(u){wasIn=true;
+  try{var s=await getDoc(doc(db,"users",u.uid));
+   if(s.exists()){var d=JSON.parse(s.data().data);Object.keys(S).forEach(function(k){delete S[k]});Object.assign(S,DEF(),d);baseSave();refresh()}
+   else window.save()}catch(e){}
+ }else if(wasIn){wasIn=false;Object.keys(S).forEach(function(k){delete S[k]});Object.assign(S,DEF());baseSave();refresh()}
+});
 </script>
 </body>
 </html>
