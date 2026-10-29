@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<meta name="description" content="Glucodive is a free self-development website: a daily habit checklist, exercise guide with animations, BMR and nutrition planner, and a monthly progress report.">
+<meta property="og:title" content="Glucodive · Dive into your best self">
+<meta property="og:description" content="Daily checklist, exercise guide, nutrition plan and monthly report in one place.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8C%8A%3C/text%3E%3C/svg%3E">
+<title>Glucodive · Dive into your best self</title>
+<style>
+:root{--bg:#000;--card:#0d0d0d;--line:#2a2218;--tx:#f4efe6;--mu:#8d8574;--or:#ff9f1c;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-padding-top:calc(70px + env(safe-area-inset-top,0px))}
+body{margin:0;background:radial-gradient(110% 40% at 50% -6%,#2b1a04 0%,#000 65%) no-repeat #000;color:var(--tx);font:16px/1.55 "Trebuchet MS","Segoe UI",system-ui,sans-serif}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:#000;z-index:30}
+.wrap{max-width:1040px;margin:0 auto;padding:0 18px}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:rgba(0,0,0,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+header .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;height:58px}
+.logo{font-size:22px;font-weight:800;letter-spacing:.5px;white-space:nowrap}.logo b{color:var(--or)}
+nav{display:flex;gap:4px;overflow-x:auto}
+nav button{background:none;border:0;color:var(--mu);font:inherit;font-size:14px;padding:8px 12px;border-radius:20px;cursor:pointer;white-space:nowrap;transition:.2s}
+nav button:hover{color:var(--tx)}
+nav button.a{background:var(--or);color:#000;font-weight:700}
+.hero{padding:34px 0 8px}
+.hero h1{font-size:clamp(28px,5vw,46px);line-height:1.1;margin:0 0 8px}
+.hero h1 b{color:var(--or)}
+.hero p{color:var(--mu);margin:0;max-width:560px}
+h2{font-size:20px;margin:0 0 4px}
+.sec{display:none;padding:18px 0 50px}.sec.a{display:block;animation:up .4s ease both}
+@keyframes up{from{opacity:0;transform:translateY(12px)}}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;align-items:start}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px;transition:border-color .25s}
+.grid>.card{margin-bottom:0}
+.mu{color:var(--mu);font-size:14px;margin:4px 0}
+.big{font-size:34px;font-weight:800;color:var(--or);line-height:1.1}
+.row{display:flex;gap:10px;align-items:center}.row>*{flex:1}
+.ringwrap{display:flex;align-items:center;gap:20px}
+.ring{width:140px;height:140px;flex:none;border-radius:50%}
+.ring .bg{stroke:#1c1710}.ring .fg{stroke:var(--or);stroke-linecap:round;transition:stroke-dashoffset .9s cubic-bezier(.2,.8,.2,1);filter:drop-shadow(0 0 6px #ff9f1c99)}
+.ring text{fill:var(--tx);font-size:24px;font-weight:800;text-anchor:middle}
+.ring.win{animation:glow 1.6s ease 1}@keyframes glow{40%{box-shadow:0 0 34px 2px #ff9f1c66}}
+.item{display:flex;align-items:center;gap:12px;padding:13px 4px;border-bottom:1px solid var(--line);cursor:pointer;user-select:none}
+.item:last-child{border:0}
+.box{width:26px;height:26px;border-radius:8px;border:2px solid var(--mu);display:grid;place-items:center;flex:none;transition:.25s}
+.box svg{width:14px;height:14px;stroke:#000;stroke-width:3;fill:none;stroke-dasharray:20;stroke-dashoffset:20;transition:.3s .1s}
+.item.on .box{background:var(--or);border-color:var(--or);animation:pop .35s}
+.item.on .box svg{stroke-dashoffset:0}
+@keyframes pop{50%{transform:scale(1.4)}}
+.item.on span{color:var(--mu);text-decoration:line-through}
+.del{margin-left:auto;color:var(--mu);font-size:20px;padding:0 8px}.del:hover{color:var(--or)}
+input,select{font:inherit;color:var(--tx);background:#000;border:1px solid var(--line);border-radius:10px;padding:10px;width:100%}
+input:focus,select:focus,button:focus-visible{outline:2px solid var(--or);outline-offset:1px}
+label{display:block;font-size:13px;color:var(--mu);margin:10px 0 4px}
+.btn{background:var(--or);color:#000;border:0;border-radius:12px;padding:12px 18px;font:inherit;font-weight:800;cursor:pointer;transition:transform .15s}
+.btn:hover{transform:translateY(-1px)}.btn.full{width:100%;margin-top:14px}
+.chip{background:none;border:1px solid var(--line);color:var(--tx);font:inherit;font-size:14px;border-radius:20px;padding:7px 14px;cursor:pointer;transition:.2s}
+.chip.on{background:var(--or);color:#000;border-color:var(--or);font-weight:700}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 4px}
+.pb{height:10px;background:#1c1710;border-radius:6px;overflow:hidden;margin-top:8px}
+.pb i{display:block;height:100%;width:0;background:var(--or);border-radius:6px;transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.go .pb i.g{animation:gr .9s cubic-bezier(.2,.8,.2,1) both;transform-origin:left}@keyframes gr{from{transform:scaleX(0)}}
+.ex{display:flex;gap:14px;align-items:center;cursor:pointer}.ex.ok{border-color:var(--or)}
+.fig{width:120px;height:120px;flex:none}
+.big2{color:var(--or);font-weight:800;font-size:18px}
+.tag{font-size:13px;color:var(--mu)}.ex.ok .tag{color:var(--or)}
+.kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.kpi div{background:#000;border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}
+.kpi b{display:block;font-size:24px;color:var(--or)}.kpi small{color:var(--mu);font-size:12px}
+.hm{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.hm i{aspect-ratio:1;border-radius:8px;display:grid;place-items:center;font-style:normal;font-size:11px;color:#8a7a60;animation:up .5s ease both}
+.draw{stroke-dasharray:1000;stroke-dashoffset:1000;animation:dr 1.5s ease forwards}@keyframes dr{to{stroke-dashoffset:0}}
+.rad{transform-origin:130px 105px;animation:sc 1s cubic-bezier(.2,.8,.2,1) both}@keyframes sc{from{transform:scale(0)}}
+.hl{display:flex;justify-content:space-between;font-size:14px;margin-top:12px}.hl b{color:var(--or)}
+.scale{position:relative;height:12px;border-radius:8px;margin:16px 0 6px;background:linear-gradient(90deg,#6b5f4a 0 14%,#ff9f1c 14% 40%,#c26a00 40% 60%,#7a2e00 60%)}
+.scale i{position:absolute;top:-6px;width:4px;height:24px;background:#fff;border-radius:2px;left:0;transition:left 1s cubic-bezier(.2,.8,.2,1)}
+.glasses{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.gl{width:30px;height:38px;border-radius:4px 4px 10px 10px;border:2px solid var(--or);cursor:pointer;transition:.25s}.gl.on{background:var(--or)}
+.meal{cursor:pointer}.meal.ok{border-color:var(--or)}
+.meal ul{margin:6px 0;padding-left:18px;color:#d8d2c4}
+.late{display:none;border-color:var(--or);color:var(--or)}
+footer{border-top:1px solid var(--line);padding:22px 0;color:var(--mu);font-size:13px;text-align:center}
+@media (max-width:560px){.ex{flex-direction:column;text-align:center}.ringwrap{flex-direction:column;text-align:center}.logo{font-size:19px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.draw{stroke-dashoffset:0}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><div class="logo">Gluco<b>dive</b></div>
+<nav><button data-t="today" class="a">Today</button><button data-t="train">Train</button><button data-t="nutrition">Nutrition</button><button data-t="report">Report</button></nav></div></header>
+
+<div class="wrap">
+<div class="hero"><h1>Dive into your <b>best self</b>.</h1><p>Your daily checklist, exercise guide, nutrition plan and monthly report in one place. <span id="date"></span></p></div>
+
+<section class="sec a" id="today">
+ <div class="grid">
+  <div>
+   <div class="card ringwrap"><svg class="ring" id="ring" viewBox="0 0 100 100"><circle class="bg" cx="50" cy="50" r="42" fill="none" stroke-width="9"/><circle class="fg" id="rg" cx="50" cy="50" r="42" fill="none" stroke-width="9" transform="rotate(-90 50 50)" stroke-dasharray="263.9" stroke-dashoffset="263.9"/><text x="50" y="58" id="pc">0%</text></svg>
+    <div><div class="big" id="cnt"></div><p class="mu" id="msg"></p></div></div>
+   <div class="card late" id="late"></div>
+   <div class="card"><div class="row"><input id="nh" placeholder="Add a daily habit" maxlength="30"><button class="btn" id="ah" style="flex:none">Add</button></div></div>
+  </div>
+  <div>
+   <div class="card" id="list"></div>
+   <div class="card"><h2>Night reminder</h2><p class="mu">Get a reminder to fill your checklist before bed.</p>
+    <div class="row"><input type="time" id="rt" value="21:30"><button class="btn" id="rb" style="flex:none">Turn on</button></div>
+    <p class="mu" id="rs"></p></div>
+  </div>
+ </div>
+</section>
+
+<section class="sec" id="train">
+ <div class="card"><h2>Your exercise level</h2><p class="mu" id="lvnote"></p><div class="chips" id="lvchips"></div>
+  <div class="pb"><i id="exbar"></i></div><p class="mu" id="exn"></p></div>
+ <div class="grid" id="exgrid"></div>
+ <p class="mu" style="margin-top:14px">Tap an exercise when you finish it. Finish them all and “Exercise” is ticked on your checklist. Stop if you feel pain, and see a doctor first if you have a health condition.</p>
+</section>
+
+<section class="sec" id="nutrition">
+ <div class="grid">
+  <div class="card"><h2>Your body details</h2>
+   <div class="row"><div><label>Age</label><input id="age" type="number" inputmode="numeric" min="10" max="99"></div><div><label>Gender</label><select id="sex"><option value="m">Male</option><option value="f">Female</option></select></div></div>
+   <div class="row"><div><label>Height (cm)</label><input id="ht" type="number" inputmode="decimal"></div><div><label>Weight (kg)</label><input id="wt" type="number" inputmode="decimal"></div></div>
+   <label>Exercise experience</label><select id="exp"><option value="0">Just starting</option><option value="1">Some experience</option><option value="2">Train regularly for years</option></select>
+   <label>Daily activity</label><select id="act"><option value="1.2">Mostly sitting</option><option value="1.375">Light activity</option><option value="1.55">Moderately active</option><option value="1.725">Very active</option></select>
+   <label>Goal</label><select id="goal"><option value="-400">Lose fat</option><option value="0">Maintain weight</option><option value="300">Build muscle</option></select>
+   <button class="btn full" id="calc">Calculate my plan</button></div>
+  <div id="fres"></div>
+ </div>
+</section>
+
+<section class="sec" id="report">
+ <div class="grid"><div class="card" id="rep"></div><div class="card" id="hist"></div></div>
+ <p class="mu" style="margin-top:14px">Open this page on the 1st of each month to see last month’s result. Your report is built from your daily checklist.</p>
+</section>
+</div>
+<footer>Glucodive · Your data stays in this browser. Nutrition numbers are estimates, not medical advice.</footer>
+
+<script>
+var OR="#ff9f1c";
+function $(i){return document.getElementById(i)}
+function esc(t){return String(t).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function pad(n){return String(n).padStart(2,"0")}
+function key(d){return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate())}
+var now=new Date(),T=key(now),KEY="glucodive_site_v1";
+var S={habits:["Wake up on time","Exercise","Study","Prayer","Drink enough water"],log:{},ex:{},meals:{},water:{},p:null,rt:"21:30"};
+try{var r=localStorage.getItem(KEY);if(r)S=Object.assign(S,JSON.parse(r))}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+$("date").textContent=now.toLocaleDateString(undefined,{weekday:"long",day:"numeric",month:"long"})+".";
+
+/* ---------- data ---------- */
+var POSES={
+ squat:[[50,14,50,24,50,52,52,38,52,50,48,38,48,50,51,70,52,90,49,70,48,90],[44,32,42,42,30,66,56,42,68,42,54,44,66,44,56,64,52,90,54,66,48,90]],
+ pushup:[[68,52,60,56,36,70,61,71,62,86,61,71,62,86,24,77,12,84,24,77,12,84],[68,70,60,74,36,81,50,82,62,86,50,82,62,86,24,84,12,87,24,84,12,87]],
+ plank:[[66,55,58,60,34,66,56,84,70,84,56,84,70,84,22,75,10,84,22,75,10,84],[66,53,58,58,34,62,56,84,70,84,56,84,70,84,22,73,10,84,22,73,10,84]],
+ bridge:[[14,80,24,80,50,80,34,82,44,82,34,82,44,82,66,60,78,84,66,60,78,84],[16,80,26,78,50,58,34,82,44,82,34,82,44,82,72,56,78,84,72,56,78,84]],
+ lunge:[[50,14,50,24,50,52,52,38,52,50,48,38,48,50,51,70,52,90,49,70,48,90],[50,30,50,40,50,66,46,50,50,60,54,50,50,60,38,84,24,88,66,66,66,90]],
+ pullup:[[50,28,50,38,50,62,45,22,44,8,55,22,56,8,49,76,48,90,51,76,52,90],[50,12,50,22,50,46,40,16,44,8,60,16,56,8,49,60,48,74,51,60,52,74]],
+ climber:[[68,52,60,56,36,64,61,71,62,86,61,71,62,86,48,72,40,80,22,74,10,84],[68,52,60,56,36,64,61,71,62,86,61,71,62,86,22,74,10,84,48,72,40,80]],
+ march:[[50,14,50,24,50,52,44,38,40,48,56,38,60,46,58,62,58,78,49,72,48,90],[50,14,50,24,50,52,56,38,60,46,44,38,40,48,51,72,52,90,58,62,58,78]]
+};
+var SEG=[[1,2],[1,3],[3,4],[1,5],[5,6],[2,7],[7,8],[2,9],[9,10]];
+var EX={
+ squat:{n:"Bodyweight squat",t:"Feet shoulder-width apart. Sit back as if onto a chair, chest up, knees over your toes."},
+ pushup:{n:"Push-up",t:"Keep your body in one straight line. Lower your chest to the floor, then press up. Use your knees if needed."},
+ plank:{n:"Plank",t:"Rest on your forearms. Tighten your stomach and keep your hips level. Do not let your back sag."},
+ bridge:{n:"Glute bridge",t:"Lie on your back with knees bent. Push through your heels and lift your hips into a straight line."},
+ lunge:{n:"Lunge",t:"Step forward and lower until both knees bend about 90 degrees. Push back up, then switch legs."},
+ pullup:{n:"Pull-up or row",t:"Pull your chest toward the bar and lower slowly. Use a sturdy bar, or do rows under a strong table."},
+ climber:{n:"Mountain climber",t:"From a high plank, drive one knee toward your chest, then switch quickly. Keep your hips low."},
+ march:{n:"Brisk march or walk",t:"Lift your knees and swing your arms. Use it as a warm-up or a longer walk."}
+};
+var PLANS={
+ Beginner:[["march","5 min warm-up"],["squat","2 × 10"],["pushup","2 × 8 (knees down)"],["plank","2 × 20 s"],["bridge","2 × 12"]],
+ Intermediate:[["march","5 min warm-up"],["squat","3 × 15"],["pushup","3 × 12"],["lunge","3 × 10 per leg"],["plank","3 × 45 s"],["climber","3 × 30 s"],["pullup","3 × 6"]],
+ Professional:[["march","10 min dynamic warm-up"],["pullup","4 × 8"],["pushup","4 × 15"],["lunge","4 × 12 per leg"],["squat","4 × 20 (add a jump)"],["climber","4 × 45 s"],["plank","3 × 90 s"]]
+};
+var LVN={Beginner:"Train 3 days a week with a rest day between.",Intermediate:"Train 4–5 days a week and add reps every week.",Professional:"Train 5–6 days a week with 1 full rest day."};
+var MEALS=[
+ ["Breakfast",.25,["Oats with banana and nuts","Eggs, whole-grain toast and fruit","Yogurt with berries and seeds"]],
+ ["Lunch",.35,["Rice or roti, lentils and vegetables","Grilled chicken or fish, rice and salad","Chickpea and vegetable bowl"]],
+ ["Snack",.1,["Fruit and a handful of almonds","Boiled eggs","Milk or yogurt"]],
+ ["Dinner",.3,["Grilled fish, chicken or lentils with vegetables","Vegetable soup, salad and eggs","Whole-grain wrap with beans or chicken"]]
+];
+var GTIP={"-400":"To lose fat: fill half your plate with vegetables and skip sugary drinks.","0":"To maintain: keep meals balanced and eat at regular times.","300":"To build muscle: add a protein portion to every meal and eat within 2 hours after training."};
+
+/* ---------- Today ---------- */
+function cu(p){var e=$("pc"),a=parseInt(e.textContent)||0,t0=null;function f(t){t0=t0||t;var k=Math.min((t-t0)/600,1);e.textContent=Math.round(a+(p-a)*k)+"%";if(k<1)requestAnimationFrame(f)}requestAnimationFrame(f)}
+function pctNow(){var d=S.log[T]||{},n=S.habits.filter(function(h){return d[h]}).length;return S.habits.length?Math.round(n/S.habits.length*100):0}
+function today(){
+ var d=S.log[T]||{},n=S.habits.filter(function(h){return d[h]}).length,pc=pctNow();
+ cu(pc);$("rg").style.strokeDashoffset=263.9*(1-pc/100);$("ring").classList.toggle("win",pc==100);
+ $("cnt").textContent=n+" of "+S.habits.length+" done";
+ $("msg").textContent=pc==100?"Perfect day. Rest well.":pc>=60?"Good pace. Finish strong.":"Tap a habit when you complete it.";
+ $("list").innerHTML=S.habits.map(function(h,i){return'<div class="item'+(d[h]?" on":"")+'" data-i="'+i+'"><div class="box"><svg viewBox="0 0 16 16"><path d="M3 8.5l3.2 3L13 4.5"/></svg></div><span>'+esc(h)+'</span><b class="del" data-d="'+i+'" title="Remove">×</b></div>'}).join("");
+ var hm=S.rt.split(":"),late=now.getHours()*60+now.getMinutes()>=(+hm[0])*60+(+hm[1]);
+ var L=$("late");L.style.display=late&&pc<100?"block":"none";L.textContent="It’s late. Fill in your checklist before you go to bed.";
+}
+$("list").onclick=function(e){
+ var dl=e.target.dataset.d,it=e.target.closest(".item");
+ if(dl!==undefined){var h=S.habits[+dl];if(confirm("Remove “"+h+"”?")){S.habits.splice(+dl,1);save();today()}return}
+ if(!it)return;var h2=S.habits[+it.dataset.i],d=Object.assign({},S.log[T]||{});d[h2]=!d[h2];S.log[T]=d;save();today()};
+$("ah").onclick=function(){var v=$("nh").value.trim();if(!v||S.habits.indexOf(v)>-1)return;S.habits.push(v);$("nh").value="";save();today()};
+$("nh").onkeydown=function(e){if(e.key=="Enter")$("ah").click()};
+
+/* ---------- reminder (works while this page is open) ---------- */
+$("rt").value=S.rt;
+function rstat(){var ok="Notification" in window&&Notification.permission=="granted";$("rs").textContent=ok?"Reminder is on for "+S.rt+" while this page is open in your browser.":"Reminder is off. A browser can only remind you while the page is open.";$("rb").textContent=ok?"Update":"Turn on"}
+$("rb").onclick=function(){S.rt=$("rt").value||"21:30";save();today();
+ if(!("Notification" in window)){rstat();return}
+ Notification.requestPermission().then(rstat)};
+setInterval(function(){
+ if(!("Notification" in window)||Notification.permission!="granted"||S.lastN===T)return;
+ var n=new Date(),h=S.rt.split(":");
+ if(n.getHours()*60+n.getMinutes()>=(+h[0])*60+(+h[1])&&pctNow()<100){try{new Notification("Glucodive",{body:"Fill your checklist before bed."});S.lastN=T;save()}catch(e){}}
+},30000);rstat();
+
+/* ---------- Train ---------- */
+var lvSel=null,figs=[],raf=0,still=matchMedia("(prefers-reduced-motion:reduce)").matches;
+function lvOf(p){var s={1.2:0,1.375:1,1.55:2,1.725:3}[p.act]+(+p.exp||0);if(p.age>50)s--;if(p.age<16)s--;if(p.wt/Math.pow(p.ht/100,2)>=30)s--;return s<=1?"Beginner":s<=3?"Intermediate":"Professional"}
+function train(){
+ var lv=S.p?lvOf(S.p):null,cur=lvSel||lv||"Beginner",list=PLANS[cur],ed=S.ex[T]||{},nd=list.filter(function(x){return ed[x[0]]}).length;
+ $("lvnote").textContent=(lv?"Suggested for you: "+lv+". ":"Fill in the Nutrition tab to get your personal level. ")+LVN[cur];
+ $("lvchips").innerHTML=Object.keys(PLANS).map(function(l){return'<button class="chip'+(cur==l?" on":"")+'" data-l="'+l+'">'+l+"</button>"}).join("");
+ $("exbar").style.width=Math.round(nd/list.length*100)+"%";$("exn").textContent=nd+" of "+list.length+" exercises done today";
+ $("exgrid").innerHTML=list.map(function(x){var k=x[0];return'<div class="card ex'+(ed[k]?" ok":"")+'" data-k="'+k+'"><svg class="fig" viewBox="0 0 100 100" data-k="'+k+'"></svg><div><b>'+EX[k].n+'</b><div class="big2">'+x[1]+'</div><p class="mu">'+EX[k].t+'</p><span class="tag">'+(ed[k]?"✓ Done":"Tap when done")+"</span></div></div>"}).join("");
+ figs=[].slice.call(document.querySelectorAll("svg.fig")).map(function(sv){
+  var k=sv.dataset.k;
+  sv.innerHTML='<line x1="0" y1="91" x2="100" y2="91" stroke="#2a2218" stroke-width="1.5"/>'+(k=="pullup"?'<line x1="36" y1="7" x2="64" y2="7" stroke="#8d8574" stroke-width="3"/>':"")+SEG.map(function(){return'<line stroke="'+OR+'" stroke-width="4" stroke-linecap="round"/>'}).join("")+'<circle r="7" fill="#000" stroke="'+OR+'" stroke-width="4"/>';
+  return{k:k,ls:[].slice.call(sv.querySelectorAll("line")).slice(k=="pullup"?2:1),c:sv.querySelector("circle")}});
+ if(!raf)loop();
+}
+function loop(){
+ raf=requestAnimationFrame(loop);
+ if(!$("train").classList.contains("a"))return;
+ var t=still?0:(1-Math.cos(performance.now()/1800*2*Math.PI))/2;
+ figs.forEach(function(f){
+  var A=POSES[f.k][0],B=POSES[f.k][1],q=A.map(function(a,i){return a+(B[i]-a)*t});
+  f.c.setAttribute("cx",q[0]);f.c.setAttribute("cy",q[1]);
+  SEG.forEach(function(s,i){var l=f.ls[i];l.setAttribute("x1",q[s[0]*2]);l.setAttribute("y1",q[s[0]*2+1]);l.setAttribute("x2",q[s[1]*2]);l.setAttribute("y2",q[s[1]*2+1])})});
+}
+$("lvchips").onclick=function(e){if(e.target.dataset.l){lvSel=e.target.dataset.l;train()}};
+$("exgrid").onclick=function(e){
+ var c=e.target.closest(".ex");if(!c)return;
+ var lv=S.p?lvOf(S.p):null,cur=lvSel||lv||"Beginner",k=c.dataset.k,ed=Object.assign({},S.ex[T]||{});
+ ed[k]=!ed[k];S.ex[T]=ed;
+ if(PLANS[cur].every(function(x){return ed[x[0]]})&&S.habits.indexOf("Exercise")>-1){var d=Object.assign({},S.log[T]||{});d.Exercise=true;S.log[T]=d}
+ save();train();today()};
+
+/* ---------- Nutrition ---------- */
+if(S.p){["age","sex","ht","wt","exp","act","goal"].forEach(function(k){$(k).value=S.p[k]})}
+$("calc").onclick=function(){
+ var q={age:+$("age").value,sex:$("sex").value,ht:+$("ht").value,wt:+$("wt").value,exp:+$("exp").value,act:+$("act").value,goal:+$("goal").value};
+ if(!q.age||!q.ht||!q.wt){$("fres").innerHTML='<div class="card mu">Please enter your age, height and weight.</div>';return}
+ S.p=q;save();food();train()};
+function food(){
+ var p=S.p;
+ if(!p){$("fres").innerHTML='<div class="card"><p class="mu">Fill in your details and press Calculate to see your calories, nutrients and meal plan.</p></div>';return}
+ var bmi=p.wt/Math.pow(p.ht/100,2),bmr=10*p.wt+6.25*p.ht-5*p.age+(p.sex=="m"?5:-161),tdee=bmr*p.act,cal=Math.round(tdee+p.goal),pro=Math.round(p.wt*1.6),fat=Math.round(cal*.27/9),carb=Math.round((cal-pro*4-fat*9)/4);
+ var cat=bmi<18.5?"Underweight":bmi<25?"Healthy range":bmi<30?"Overweight":"Obese range",pos=Math.max(0,Math.min(100,(bmi-15)/25*100));
+ var gl=Math.min(16,Math.ceil(p.wt*.035/.25)),wc=S.water[T]||0,eat=S.meals[T]||{},ec=0;
+ MEALS.forEach(function(m){if(eat[m[0]])ec+=Math.round(cal*m[1])});
+ var h='<div class="card"><div class="kpi"><div><b>'+cal+'</b><small>kcal a day</small></div><div><b>'+Math.round(bmr)+'</b><small>BMR</small></div><div><b>'+bmi.toFixed(1)+'</b><small>BMI</small></div></div>'
+ +'<p class="mu">BMI '+bmi.toFixed(1)+": "+cat+'.</p><div class="scale"><i id="mk"></i></div>'
+ +'<p class="mu">Your body burns about '+Math.round(tdee)+' kcal a day. '+GTIP[p.goal]+"</p>"
+ +[["Protein",pro,4],["Carbs",carb,4],["Fat",fat,9]].map(function(m){return'<div class="hl"><span>'+m[0]+'</span><b>'+m[1]+' g</b></div><div class="pb"><i class="g" style="width:'+Math.round(m[1]*m[2]*100/cal)+'%"></i></div>'}).join("")
+ +'<p class="mu">Bars show each nutrient’s share of your daily calories.</p></div>'
+ +'<div class="card"><div class="hl" style="margin:0"><span>Eaten today</span><b>'+ec+" of "+cal+' kcal</b></div><div class="pb"><i class="g" style="width:'+Math.min(100,Math.round(ec/cal*100))+'%"></i></div><p class="mu">Tap a meal below when you have eaten it.</p></div>'
+ +MEALS.map(function(m){return'<div class="card meal'+(eat[m[0]]?" ok":"")+'" data-m="'+m[0]+'"><div class="hl" style="margin:0"><b style="color:var(--tx)">'+m[0]+"</b><span>"+(eat[m[0]]?"✓ Eaten":"Tap when eaten")+'</span></div><div class="big2">'+Math.round(cal*m[1])+" kcal · "+Math.round(pro*m[1])+' g protein</div><p class="mu" style="margin-bottom:0">Choose one:</p><ul>'+m[2].map(function(o){return"<li>"+o+"</li>"}).join("")+"</ul></div>"}).join("")
+ +'<div class="card"><div class="hl" style="margin:0"><span>Water today</span><b>'+wc+" of "+gl+' glasses</b></div><div class="glasses">'+Array.from({length:gl},function(_,i){return'<div class="gl'+(i<wc?" on":"")+'" data-w="'+(i+1)+'"></div>'}).join("")+"</div></div>";
+ $("fres").innerHTML=h;
+ requestAnimationFrame(function(){requestAnimationFrame(function(){var m=$("mk");if(m)m.style.left="calc("+pos+"% - 2px)"})});
+}
+$("fres").onclick=function(e){
+ var m=e.target.closest(".meal"),g=e.target.closest(".gl");
+ if(g){var v=+g.dataset.w;S.water[T]=(S.water[T]||0)==v?v-1:v;save();food()}
+ else if(m){var ea=Object.assign({},S.meals[T]||{});ea[m.dataset.m]=!ea[m.dataset.m];S.meals[T]=ea;save();food()}};
+
+/* ---------- Report ---------- */
+function report(){
+ var y=now.getFullYear(),mo=now.getMonth(),nd=new Date(y,mo+1,0).getDate(),td=now.getDate(),H=S.habits,sc=[],cnt={};
+ H.forEach(function(h){cnt[h]=0});
+ for(var d=1;d<=nd;d++){var l=S.log[key(new Date(y,mo,d))]||{},n=0;H.forEach(function(h){if(l[h]){n++;cnt[h]++}});sc.push(d>td?null:H.length?Math.round(n/H.length*100):0)}
+ var past=sc.filter(function(v){return v!==null}),avg=Math.round(past.reduce(function(a,b){return a+b},0)/(past.length||1)),
+ full=past.filter(function(v){return v==100}).length,act=past.filter(function(v){return v>0}).length,
+ per=H.map(function(h){return[h,Math.round(cnt[h]/td*100)]}),srt=per.slice().sort(function(a,b){return b[1]-a[1]}),best=srt[0]||["-",0],low=srt[srt.length-1]||["-",0];
+ var h='<h2>'+now.toLocaleDateString(undefined,{month:"long",year:"numeric"})+'</h2><div class="kpi"><div><b>'+avg+'%</b><small>Monthly average</small></div><div><b>'+full+'</b><small>Perfect days</small></div><div><b>'+act+'</b><small>Active days</small></div></div>';
+ var first=new Date(y,mo,1).getDay(),g="";
+ "SMTWTFS".split("").forEach(function(c){g+='<i style="aspect-ratio:auto;color:#6b5f4a">'+c+"</i>"});
+ for(var i=0;i<first;i++)g+="<i></i>";
+ sc.forEach(function(v,i){g+='<i style="animation-delay:'+(i*.015).toFixed(2)+"s;background:"+(v===null?"#0f0b05":"rgba(255,159,28,"+(.15+v*.85/100).toFixed(2)+")")+(v>55?";color:#000;font-weight:700":"")+'">'+(i+1)+"</i>"});
+ h+='<div class="hm">'+g+'</div><p class="mu">Brighter days mean more habits done.</p>';
+ $("rep").innerHTML=h;
+ var rd="";
+ if(H.length>2){var cx=130,cy=105,R=75,N=H.length,pt=function(i,v){var a=-Math.PI/2+i*2*Math.PI/N;return[(cx+R*v/100*Math.cos(a)).toFixed(1),(cy+R*v/100*Math.sin(a)).toFixed(1)]};
+  [25,50,75,100].forEach(function(v){rd+='<polygon points="'+H.map(function(_,i){return pt(i,v)}).join(" ")+'" fill="none" stroke="#2a2218"/>'});
+  rd+='<polygon class="rad" points="'+per.map(function(p,i){return pt(i,p[1])}).join(" ")+'" fill="#ff9f1c44" stroke="#ff9f1c" stroke-width="2"/>';
+  H.forEach(function(x,i){var q=pt(i,124);rd+='<text x="'+q[0]+'" y="'+q[1]+'" fill="#8d8574" font-size="9" text-anchor="middle">'+esc(x.slice(0,12))+"</text>"});
+  rd='<svg viewBox="0 0 260 215" width="100%" style="margin-top:8px">'+rd+"</svg>"}
+ var t='<h2>Daily score trend</h2>';
+ if(past.length>1){var pp=past.map(function(v,i){return(i*300/(past.length-1)).toFixed(1)+","+(100-v)}).join(" ");
+  t+='<svg viewBox="0 0 300 100" width="100%" style="margin:10px 0"><defs><linearGradient id="ag" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff9f1c" stop-opacity=".4"/><stop offset="1" stop-color="#ff9f1c" stop-opacity="0"/></linearGradient></defs><polygon points="0,100 '+pp+' 300,100" fill="url(#ag)"/><polyline class="draw" pathLength="1000" points="'+pp+'" fill="none" stroke="#ff9f1c" stroke-width="3" stroke-linejoin="round"/></svg>'}
+ else t+='<p class="mu">Log two days to see your trend.</p>';
+ t+='<h2 style="margin-top:14px">Average by habit</h2>';
+ per.forEach(function(p){t+='<div class="hl"><span>'+esc(p[0])+"</span><b>"+p[1]+'%</b></div><div class="pb"><i class="g" style="width:'+p[1]+'%"></i></div>'});
+ t+=rd+'<p class="mu">Strongest: '+esc(best[0])+" ("+best[1]+"%). Needs work: "+esc(low[0])+" ("+low[1]+"%).</p>";
+ $("hist").innerHTML=t;
+}
+
+/* ---------- tabs ---------- */
+var R={today:today,train:train,nutrition:food,report:report};
+function show(n){
+ if(!R[n])n="today";
+ document.querySelectorAll("nav button,.sec").forEach(function(x){x.classList.remove("a")});
+ document.querySelector('nav button[data-t="'+n+'"]').classList.add("a");
+ var s=$(n);s.classList.add("a","go");R[n]();
+ setTimeout(function(){s.classList.remove("go")},1200);window.scrollTo(0,0);
+}
+document.querySelectorAll("nav button").forEach(function(b){b.onclick=function(){location.hash=b.dataset.t;show(b.dataset.t)}});
+today();food();show(location.hash.slice(1)||"today");
+</script>
+</body>
+</html>
